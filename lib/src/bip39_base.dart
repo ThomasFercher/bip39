@@ -1,11 +1,12 @@
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:bip39/src/wordlists/combined.dart';
 import 'package:crypto/crypto.dart' show sha256;
 import 'package:hex/hex.dart';
 
 import 'utils/pbkdf2.dart';
-import 'wordlists/english.dart';
+import 'wordlists/en.dart';
 
 const int _SIZE_BYTE = 255;
 const _INVALID_MNEMONIC = 'Invalid mnemonic';
@@ -72,7 +73,7 @@ String entropyToMnemonic(String entropyString) {
       .allMatches(bits)
       .map((match) => match.group(0)!)
       .toList(growable: false);
-  List<String> wordlist = WORDLIST;
+  List<String> wordlist = ALLWORDS;
   String words =
       chunks.map((binary) => wordlist[_binaryToByte(binary)]).join(' ');
   return words;
@@ -103,7 +104,7 @@ String mnemonicToEntropy(mnemonic) {
   if (words.length % 3 != 0) {
     throw new ArgumentError(_INVALID_MNEMONIC);
   }
-  final wordlist = WORDLIST;
+  final wordlist = ALLWORDS;
   // convert word indices to 11 bit binary strings
   final bits = words.map((word) {
     final index = wordlist.indexOf(word);
